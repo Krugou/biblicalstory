@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>OpenStreetMap with Leaflet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        const locations = [
+            { name: "Antioch", lat: 36.207, lon: 36.155 },
+            { name: "Bab edh-Dhra archaeological site", lat: 30.77, lon: 35.58 },
+            { name: "Babylon", lat: 32.545, lon: 44.422 },
+            { name: "Bethany", lat: 31.858, lon: 35.468 },
+            { name: "Bethlehem Ephrathah", lat: 31.704, lon: 35.203 },
+            { name: "Bethlehem", lat: 31.704, lon: 35.203 },
+            { name: "Bethphage", lat: 31.774, lon: 35.247 },
+            { name: "Cana", lat: 32.692, lon: 35.314 },
+            { name: "Capernaum", lat: 32.872, lon: 35.573 },
+            { name: "Capernaum", lat: 32.880, lon: 35.573 },
+            { name: "Carmel", lat: 32.694, lon: 35.005 },
+            { name: "Chorazin", lat: 32.901, lon: 35.574 },
+            { name: "Cyprus", lat: 35.126, lon: 33.429 },
+            { name: "Damascus", lat: 33.510, lon: 36.291 },
+            { name: "Dan", lat: 33.218, lon: 35.618 },
+            { name: "Dead Sea", lat: 31.5, lon: 35.5 },
+            { name: "Eastern shore of the Dead Sea", lat: 31.0, lon: 35.5 },
+            { name: "Eden", lat: 31.982, lon: 35.875 },
+            { name: "Egypt", lat: 26.820, lon: 30.802 },
+            { name: "Ephesus", lat: 37.939, lon: 27.340 },
+            { name: "Gath", lat: 31.602, lon: 34.896 },
+            { name: "Gethsemane", lat: 31.869, lon: 35.223 },
+            { name: "Golgotha", lat: 31.780, lon: 35.229 },
+            { name: "Hazor", lat: 33.019, lon: 35.569 },
+            { name: "Hebron", lat: 31.533, lon: 35.093 },
+            { name: "Jericho", lat: 31.864, lon: 35.452 },
+            { name: "Jerusalem", lat: 31.777, lon: 35.235 },
+            { name: "Joppa", lat: 32.050, lon: 34.755 },
+            { name: "Joppa", lat: 32.050, lon: 34.755 },
+            { name: "Lebanon", lat: 34.092, lon: 35.875 },
+            { name: "Mamre", lat: 31.543, lon: 35.099 },
+            { name: "Megiddo", lat: 32.577, lon: 35.183 },
+            { name: "Mount Ararat", lat: 39.725, lon: 44.248 },
+            { name: "Mount Carmel", lat: 32.703, lon: 34.963 },
+            { name: "Mount Gilboa", lat: 32.463, lon: 35.401 },
+            { name: "Mount Hermon", lat: 33.256, lon: 35.845 },
+            { name: "Mount Hor", lat: 30.366, lon: 35.404 },
+            { name: "Mount Moriah", lat: 31.776, lon: 35.235 },
+            { name: "Mount Nebo", lat: 31.765, lon: 35.736 },
+            { name: "Mount of Beatitudes", lat: 32.889, lon: 35.555 },
+            { name: "Mount of Olives", lat: 31.777, lon: 35.246 },
+            { name: "Mount Seir", lat: 30.902, lon: 35.171 },
+            { name: "Mount Sinai", lat: 28.536, lon: 33.975 },
+            { name: "Mount Tabor", lat: 32.679, lon: 35.365 },
+            { name: "Mount Zion", lat: 31.776, lon: 35.233 },
+            { name: "Nazareth", lat: 32.699, lon: 35.303 },
+            { name: "Nile River", lat: 30.091, lon: 31.236 },
+            { name: "Nineveh", lat: 36.357, lon: 43.148 },
+            { name: "Nineveh", lat: 36.358, lon: 43.143 },
+            { name: "Northern end of the Dead Sea", lat: 32.5, lon: 35.5 },
+            { name: "Numeira archaeological site", lat: 30.84, lon: 35.61 },
+            { name: "Philippi", lat: 41.012, lon: 24.284 },
+            { name: "Red Sea", lat: 20.425, lon: 37.348 },
+            { name: "River Jordan", lat: 32.422, lon: 35.564 },
+            { name: "Samaria", lat: 32.184, lon: 35.287 },
+            { name: "Sardis", lat: 38.475, lon: 28.009 },
+            { name: "Sea of Galilee", lat: 32.820, lon: 35.587 },
+            { name: "Shechem", lat: 32.209, lon: 35.278 },
+            { name: "Shiloh", lat: 32.085, lon: 35.279 },
+            { name: "Sodom and Gomorrah", lat: 31.167, lon: 35.383 },
+            { name: "Sodom", lat: 31.211, lon: 35.370 },
+            { name: "Southern end of the Dead Sea", lat: 31.5, lon: 35.5 },
+            { name: "Tarshish", lat: 36.246, lon: -5.952 },
+            { name: "Tarsus", lat: 36.912, lon: 34.885 },
+            { name: "Tyre", lat: 33.275, lon: 35.196 },
+            { name: "Ur of the Chaldeans", lat: 30.959, lon: 46.136 },
+            { name: "Ur", lat: 30.966, lon: 46.103 },
+            { name: "Valley of Elah", lat: 31.725, lon: 34.968 },
+            { name: "Zarephath", lat: 33.956, lon: 35.204 },
+            { name: "Zion", lat: 31.776, lon: 35.233 },
+        ];
+
+        // Initialize the map
+        const map = L.map('map').setView([31.5, 35.5], 8);
+
+        // Add OpenStreetMap tile layer to the map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+            id: 'osm'
+        }).addTo(map);
+
+        // Add markers for each location to the map
+        locations.forEach(location => {
+            const marker = L.marker([location.lat, location.lon]).addTo(map);
+            marker.bindPopup(`<b>${location.name}</b><br>Latitude: ${location.lat}<br>Longitude: ${location.lon}`);
+        });
+    </script>
+</body>
+
+</html>
